@@ -13,18 +13,36 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('username')->unique();
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('address'); 
             $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
+            $table->string('phone_num');
+            $table->string('role');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');
             $table->timestamp('created_at')->nullable();
+        });
+
+        Schema::create('products', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->integer('price');
+            $table->integer('amount'); 
+            $table->text('description');
+            $table->string('phone_num');
+            $table->string('role');
+        });
+
+        Schema::create('transactions', function (Blueprint $table) {
+            $table->string('id')->primary();
+            $table->foreignId('user_id')->nullable()->index();
+            $table->foreignId('product_id')->nullable()->index();
+            $table->integer('last_activity')->index();
+            $table->string('status');
         });
 
         Schema::create('sessions', function (Blueprint $table) {
@@ -44,6 +62,8 @@ return new class extends Migration
     {
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
+        Schema::dropIfExists('products');
+        Schema::dropIfExists('transactions');
         Schema::dropIfExists('sessions');
     }
 };
