@@ -52,10 +52,10 @@
                         </span>
                     @endif
                 </div>
-                <p class="text-lg text-gray-700 mb-4">{{ $product->description }}</p>
                 <p class="text-2xl text-yellow-600 font-bold mb-4">Rp{{ number_format($product->price, 2, ',', '.') }}</p>
+                <p class="text-lg text-gray-700 mb-4">{{ $product->description }}</p>
                 <div class="mb-4 text-gray-500 text-sm">Added on: {{ $product->created_at->format('Y-m-d') }}</div>
-                <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded text-lg mt-4">Add to Cart</button>
+                <!-- Add to Cart button removed -->
             </div>
         </div>
     </div>

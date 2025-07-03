@@ -26,8 +26,8 @@
                                     @endif
                                 </td>
                                 <td class="px-6 py-4 border-b">{{ $product->name }}</td>
-                                <td class="px-6 py-4 border-b">{{ $product->description }}</td>
                                 <td class="px-6 py-4 border-b">Rp{{ number_format($product->price, 2, ',', '.') }}</td>
+                                <td class="px-6 py-4 border-b">{{ $product->description }}</td>
                                 <td class="px-6 py-4 border-b">
                                     @if($product->is_featured)
                                         <span class="text-yellow-600 font-bold">Yes</span>

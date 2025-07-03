@@ -5,13 +5,15 @@
 <x-layout>
     <!-- Shop Content -->
     <div class="container mx-auto px-20 py-12">
-        <div class="flex max-w-md mb-10 mx-auto">
-            <input type="text" placeholder="Search An Item" class="search-input flex-1 px-6 py-4 rounded-l-full font-body text-gray-700 border-none focus:outline-none focus:ring-2 focus:ring-yellow-400">
-                <button class="bg-yellow-600 hover:bg-yellow-700 px-8 py-4 rounded-r-full transition duration-300">
-                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                </button>
+        <!-- Search Bar -->
+        <form action="{{ route('products.search') }}" method="GET" class="flex max-w-md mb-10 mx-auto">
+            <input type="text" name="q" value="{{ request('q') }}" placeholder="Search An Item" class="search-input flex-1 px-6 py-4 rounded-l-full font-body text-gray-700 border-none focus:outline-none focus:ring-2 focus:ring-yellow-400">
+            <button type="submit" class="bg-yellow-600 hover:bg-yellow-700 px-8 py-4 rounded-r-full transition duration-300">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
+        </form>
         </div>
 
         <!-- Filter Section -->
@@ -59,11 +61,9 @@
                         </div>
                         <div class="flex flex-col flex-1 p-6">
                             <h3 class="font-body font-semibold text-gray-800 mb-2">{{ $product->name }}</h3>
-                            <p class="font-body text-gray-600 text-sm mb-3">{{ $product->description }}</p>
                             <p class="font-body text-yellow-600 font-bold text-lg mb-4">Rp{{ number_format($product->price, 2, ',', '.') }}</p>
-                            <div class="mt-auto">
-                                <button class="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-2 rounded-lg font-body font-medium transition duration-300" onclick="event.preventDefault();">Add to Cart</button>
-                            </div>
+                            <p class="font-body text-gray-600 text-sm mb-3">{{ $product->description }}</p>
+                            <!-- Add to Cart button removed -->
                         </div>
                     </div>
                 </a>

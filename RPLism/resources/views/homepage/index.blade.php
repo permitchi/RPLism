@@ -166,8 +166,7 @@
             <div class="text-center mb-16">
                 <h2 class="font-logo text-5xl font-bold text-yellow-600 mb-4">Featured Products</h2>
                 <p class="font-body text-gray-600 max-w-2xl mx-auto">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tristique nunc et molestie faucibus. Nunc auctor consectetur elit, quis pulvinar.
-                </p>
+                    Take a look at our wonderful collection!                 </p>
             </div>
 
             <!-- Products Grid -->
@@ -186,6 +185,7 @@
                         <div class="p-4">
                             <h3 class="font-body font-semibold text-gray-800">{{ $product->name }}</h3>
                             <p class="font-body text-yellow-600 font-bold">Rp{{ number_format($product->price, 2, ',', '.') }}</p>
+                            <p class="font-body text-gray-600 text-sm mb-1">{{ $product->description }}</p>
                         </div>
                     </a>
                 @empty
