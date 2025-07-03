@@ -22,7 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'phone_num',
-        'role',
+        // 'role', // Do not include 'role' here to prevent mass assignment by users
     ];
 
     /**
