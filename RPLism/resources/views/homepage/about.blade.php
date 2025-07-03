@@ -1,8 +1,11 @@
-<style>
-    .hero-bg {
-        background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3') center/cover;
-    }
-</style>
+<head>
+    <title>About Us - MIINACCI</title>
+    <style>
+        .hero-bg {
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3') center/cover;
+        }
+    </style>
+</head>
 
 <x-layout>
     <!-- Hero Section -->

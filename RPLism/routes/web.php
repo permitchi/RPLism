@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
@@ -34,6 +35,23 @@ Route::get('/contact', function () {
 Route::get('/cart', function () {
     return view('cart.index');
 })->middleware('auth')->name('cart');
+
+Route::get('/checkout', function () {
+    return view('checkout/index');
+})->middleware('auth')->name('checkout');
+
+Route::post('/checkout/process', function () {
+    // Handle checkout processing logic here
+    return redirect()->route('checkout.success')->with('success', 'Order placed successfully!');
+})->middleware('auth')->name('checkout.process');
+
+Route::get('/checkout/success', function () {
+    return view('checkout/success');
+})->middleware('auth')->name('checkout.success');
+
+Route::get('/profile', [ProfileController::class, 'index'])->middleware('auth')->name('profile');
+
+Route::put('/profile/update', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
 
 // Route::get('/cart', [CartController::class, 'index'])->name('cart');
 

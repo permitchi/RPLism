@@ -1,3 +1,7 @@
+<head>
+    <title>Shop - MIINACCI</title>
+</head>
+
 <x-layout>
     <!-- Shop Content -->
     <div class="container mx-auto px-20 py-12">
