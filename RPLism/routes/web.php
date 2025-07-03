@@ -1,32 +1,46 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
-    return view('loginregis/login');
+    if (Auth::check()) {
+        return redirect()->route('homepage');
+    }
+    return view('loginregis.login');
 })->name('home');
 
 Route::get('/homepage', function () {
-    return view('homepage/index');
+    return view('homepage.index');
 })->middleware('auth')->name('homepage');
 
 Route::get('/shop', function () {
-    return view('homepage/shop');
+    return view('homepage.shop');
 })->middleware('auth')->name('shop');
 
 Route::get('/about', function () {
-    return view('homepage/about');
+    return view('homepage.about');
 })->middleware('auth')->name('about');
 
 Route::get('/contact', function () {
-    return view('homepage/contactus');
+    return view('homepage.contactus');
 })->middleware('auth')->name('contact');
 
 Route::get('/cart', function () {
-    return view('cart/index');
+    return view('cart.index');
 })->middleware('auth')->name('cart');
 
 // Route::get('/cart', [CartController::class, 'index'])->name('cart');
 
+
+use App\Http\Controllers\ProductController;
+
+Route::get('/addproduct', function () {
+    return view('pages.addproduct');
+})->middleware('auth')->name('addproduct');
+
+Route::post('/products', [ProductController::class, 'store'])->middleware('auth')->name('products.store');
+
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
+

@@ -58,15 +58,23 @@
                 </div>
             </div>
             <div class="flex items-center gap-4 justify-end flex-1">
+            <!-- Add Product Icon Button (admin only) -->
+                @if(auth()->check() && auth()->user()->role === 'admin')
+                <div class="relative">
+                    <a href="{{ route('addproduct') }}" class="text-white hover:text-yellow-400 transition" title="Add Product">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                        </svg>
+                    </a>
+                </div>
+                @endif
                 <!-- Shopping Cart -->
                 <div class="relative">
-                    <button>
-                        <a href="{{ route('cart') }}" class="text-white hover:text-yellow-400 transition">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                            </svg>
-                        </a>
-                    </button>
+                    <a href="{{ route('cart') }}" class="text-white hover:text-yellow-400 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                    </a>
                 </div>
                 <!-- Profile Dropdown -->
                 <div class="relative">
@@ -97,6 +105,7 @@
                                 </svg>
                                 Profile
                             </a>
+                            {{-- Add Product link removed from dropdown --}}
                             <div class="border-t border-gray-100 my-1"></div>
                             <form method="POST" action="{{ route('logout') }}" class="block">
                                 @csrf
