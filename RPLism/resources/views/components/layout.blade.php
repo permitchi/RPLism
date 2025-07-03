@@ -104,7 +104,14 @@
                                 </svg>
                                 Profile
                             </a>
-                            {{-- Add Product link removed from dropdown --}}
+                            @if(auth()->check() && auth()->user()->role === 'admin')
+                            <a href="{{ route('products.myproducts') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-yellow-100 hover:text-yellow-700 font-body hover:font-bold">
+                                <svg class="w-5 h-5 mr-3 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18" />
+                                </svg>
+                                My Products
+                            </a>
+                            @endif
                             <div class="border-t border-gray-100 my-1"></div>
                             <form method="POST" action="{{ route('logout') }}" class="block">
                                 @csrf

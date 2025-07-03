@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProductController;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -12,7 +13,6 @@ Route::get('/', function () {
     return view('loginregis.login');
 })->name('home');
 
-
 // Route::get('/homepage', function () {
 //     return view('homepage.index');
 // })->middleware('auth')->name('homepage');
@@ -20,9 +20,12 @@ Route::get('/', function () {
 Route::get('/homepage', [HomeController::class, 'index'])
 ->middleware('auth')->name('homepage');
 
-Route::get('/shop', function () {
-    return view('homepage.shop');
-})->middleware('auth')->name('shop');
+// Route::get('/shop', function () {
+//     return view('homepage.shop');
+// })->middleware('auth')->name('shop');
+
+Route::get('/shop', [HomeController::class, 'shop'])
+    ->middleware('auth')->name('shop');
 
 Route::get('/about', function () {
     return view('homepage.about');
@@ -61,8 +64,6 @@ Route::get('/transaction', function () {
     return view('pages.orderhistory');
 })->middleware('auth')->name('orderhistory');
 
-use App\Http\Controllers\ProductController;
-
 Route::get('/addproduct', function () {
     return view('pages.addproduct');
 })->middleware('auth')->name('addproduct');
@@ -70,8 +71,20 @@ Route::get('/addproduct', function () {
 Route::post('/products', [ProductController::class, 'store'])
 ->middleware('auth')->name('products.store');
 
+Route::get('/myproducts', [ProductController::class, 'myProducts'])
+    ->middleware('auth')->name('products.myproducts');
+
+Route::get('/editproduct/{id}', function ($id) {
+    $product = \App\Models\Product::findOrFail($id);
+    return view('pages.editproductform', compact('product'));
+})->middleware('auth')->name('editproduct');
+
 Route::get('/search', [HomeController::class, 'search'])
-->middleware('auth')->name('pages.search');
+->middleware('auth')->name('products.search');
+
+Route::get('/products/{id}', [ProductController::class, 'show'])
+    ->middleware('auth')->name('products.show');
+
 
 
 require __DIR__.'/settings.php';

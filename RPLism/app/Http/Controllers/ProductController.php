@@ -38,4 +38,12 @@ class ProductController extends Controller
 
         return redirect()->route('homepage')->with('success', 'Product added successfully!');
     }
+    /**
+     * Display the specified product.
+     */
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('products.show', compact('product'));
+    }
 }
