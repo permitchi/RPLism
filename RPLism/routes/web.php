@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProductController;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -10,7 +11,6 @@ Route::get('/', function () {
     }
     return view('loginregis.login');
 })->name('home');
-
 
 // Route::get('/homepage', function () {
 //     return view('homepage.index');
@@ -38,8 +38,6 @@ Route::get('/cart', function () {
 // Route::get('/cart', [CartController::class, 'index'])->name('cart');
 
 
-use App\Http\Controllers\ProductController;
-
 Route::get('/addproduct', function () {
     return view('pages.addproduct');
 })->middleware('auth')->name('addproduct');
@@ -47,8 +45,14 @@ Route::get('/addproduct', function () {
 Route::post('/products', [ProductController::class, 'store'])
 ->middleware('auth')->name('products.store');
 
+Route::get('/myproducts', [ProductController::class, 'myProducts'])
+    ->middleware('auth')->name('products.myproducts');
+
 Route::get('/search', [HomeController::class, 'search'])
 ->middleware('auth')->name('pages.search');
+
+Route::get('/products/{id}', [ProductController::class, 'show'])
+    ->middleware('auth')->name('products.show');
 
 
 require __DIR__.'/settings.php';

@@ -9,6 +9,25 @@ use Illuminate\Support\Facades\Auth;
 class ProductController extends Controller
 {
     /**
+     * Display the specified product.
+     */
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('products.show', compact('product'));
+    }
+    /**
+     * Display a listing of all products for admin.
+     */
+    public function myProducts()
+    {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            abort(403, 'Unauthorized action.');
+        }
+        $products = Product::orderBy('created_at', 'desc')->get();
+        return view('pages.myproducts', compact('products'));
+    }
+    /**
      * Store a newly created product in storage.
      */
     public function store(Request $request)
