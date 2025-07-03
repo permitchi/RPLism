@@ -1,3 +1,7 @@
+<head>
+    <title>Contact Us - MIINACCI</title>
+</head>
+
 <x-layout>
     <div class="container mx-auto px-20 py-16">
         <!-- Page Title -->

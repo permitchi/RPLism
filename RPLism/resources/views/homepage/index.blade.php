@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MINACCI - Homepage</title>
+    <title>Homepage - MINACCI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.bunny.net" />
     <link href="https://fonts.bunny.net/css?family=cormorant-garamond:300,400,500,600,600i,700,700i|montserrat:200,300,400,500,600,700,800" rel="stylesheet" />
@@ -94,7 +94,7 @@
                                 </svg>
                                 Wishlist
                             </a>
-                            <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-yellow-100 hover:text-red-900 font-body hover:font-medium">
+                            <a href="{{ route('profile') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-yellow-100 hover:text-red-900 font-body hover:font-medium">
                                 <svg class="w-5 h-5 mr-3 text-gray-500  hover:text-red-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
                                 </svg>
