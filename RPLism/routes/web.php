@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\HomeController;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -10,9 +11,13 @@ Route::get('/', function () {
     return view('loginregis.login');
 })->name('home');
 
-Route::get('/homepage', function () {
-    return view('homepage.index');
-})->middleware('auth')->name('homepage');
+
+// Route::get('/homepage', function () {
+//     return view('homepage.index');
+// })->middleware('auth')->name('homepage');
+
+Route::get('/homepage', [HomeController::class, 'index'])
+->middleware('auth')->name('homepage');
 
 Route::get('/shop', function () {
     return view('homepage.shop');
@@ -39,7 +44,12 @@ Route::get('/addproduct', function () {
     return view('pages.addproduct');
 })->middleware('auth')->name('addproduct');
 
-Route::post('/products', [ProductController::class, 'store'])->middleware('auth')->name('products.store');
+Route::post('/products', [ProductController::class, 'store'])
+->middleware('auth')->name('products.store');
+
+Route::get('/search', [HomeController::class, 'search'])
+->middleware('auth')->name('pages.search');
+
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

@@ -2,8 +2,12 @@
     @if(auth()->check() && auth()->user()->role === 'admin')
         <div class="container mx-auto py-8">
             <h1 class="text-2xl font-bold mb-6">Add Product</h1>
-            <form action="{{ route('products.store') }}" method="POST" class="max-w-lg mx-auto bg-white p-6 rounded shadow">
+            <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="max-w-lg mx-auto bg-white p-6 rounded shadow">
                 @csrf
+                <div class="mb-4">
+                    <label for="image" class="block text-gray-700">Product Image</label>
+                    <input type="file" name="image" id="image" class="w-full border rounded px-3 py-2 mt-1" accept="image/*">
+                </div>
                 <div class="mb-4">
                     <label for="name" class="block text-gray-700">Product Name</label>
                     <input type="text" name="name" id="name" class="w-full border rounded px-3 py-2 mt-1" required>
@@ -15,6 +19,10 @@
                 <div class="mb-4">
                     <label for="price" class="block text-gray-700">Price</label>
                     <input type="number" name="price" id="price" class="w-full border rounded px-3 py-2 mt-1" step="0.01" required>
+                </div>
+                <div class="mb-4 flex items-center">
+                    <input type="checkbox" name="is_featured" id="is_featured" class="mr-2" value="1">
+                    <label for="is_featured" class="text-gray-700">Featured Product</label>
                 </div>
                 <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">Add Product</button>
             </form>

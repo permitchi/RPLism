@@ -39,6 +39,6 @@ class HomeController extends Controller
             })
             ->paginate(12);
 
-        return view('products.search', compact('products', 'query'));
+        return view('pages.search', compact('products', 'query'));
     }
 }
