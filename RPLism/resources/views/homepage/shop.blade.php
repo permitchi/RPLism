@@ -31,92 +31,46 @@
                 </select>
             </div>
             <div class="font-body text-gray-600">
-                Showing 12 of 48 products
+                Showing
+                <span class="font-semibold">
+                    {{ $products->lastItem() ?? 0 }}
+                </span>
+                of
+                <span class="font-semibold">
+                    {{ $products->total() }}
+                </span>
+                products
             </div>
         </div>
 
         <!-- Products Grid -->
         <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            <!-- Product Card 1 -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                <div class="aspect-square bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center">
-                    <div class="w-20 h-16 bg-pink-300 rounded-lg flex items-center justify-center">
-                        <span class="text-2xl">💎</span>
+            @forelse($products as $product)
+                <a href="{{ route('products.show', $product->id) }}" class="block bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+                    <div class="aspect-square bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center">
+                        @if($product->image)
+                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover rounded-lg" />
+                        @else
+                            <div class="w-full h-full bg-pink-300 rounded-lg flex items-center justify-center">
+                                <span class="text-2xl">💎</span>
+                            </div>
+                        @endif
                     </div>
-                </div>
-                <div class="p-6">
-                    <h3 class="font-body font-semibold text-gray-800 mb-2">Diamond Necklace</h3>
-                    <p class="font-body text-gray-600 text-sm mb-3">Elegant diamond necklace</p>
-                    <p class="font-body text-yellow-600 font-bold text-lg">Rp 2,500,000</p>
-                    <button class="w-full mt-4 bg-yellow-600 hover:bg-yellow-700 text-white py-2 rounded-lg font-body font-medium transition duration-300">
-                        Add to Cart
-                    </button>
-                </div>
-            </div>
-
-            <!-- Product Card 2 -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                <div class="aspect-square bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
-                    <div class="w-20 h-16 bg-blue-300 rounded-lg flex items-center justify-center">
-                        <span class="text-2xl">👂</span>
+                    <div class="p-6">
+                        <h3 class="font-body font-semibold text-gray-800 mb-2">{{ $product->name }}</h3>
+                        <p class="font-body text-gray-600 text-sm mb-3">{{ $product->description }}</p>
+                        <p class="font-body text-yellow-600 font-bold text-lg">Rp{{ number_format($product->price, 2, ',', '.') }}</p>
+                        <button class="w-full mt-4 bg-yellow-600 hover:bg-yellow-700 text-white py-2 rounded-lg font-body font-medium transition duration-300" onclick="event.preventDefault();">Add to Cart</button>
                     </div>
-                </div>
-                <div class="p-6">
-                    <h3 class="font-body font-semibold text-gray-800 mb-2">Pearl Earrings</h3>
-                    <p class="font-body text-gray-600 text-sm mb-3">Classic pearl earrings</p>
-                    <p class="font-body text-yellow-600 font-bold text-lg">Rp 1,200,000</p>
-                    <button class="w-full mt-4 bg-yellow-600 hover:bg-yellow-700 text-white py-2 rounded-lg font-body font-medium transition duration-300">
-                        Add to Cart
-                    </button>
-                </div>
-            </div>
-
-            <!-- Product Card 3 -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                <div class="aspect-square bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center">
-                    <div class="w-20 h-16 bg-purple-300 rounded-lg flex items-center justify-center">
-                        <span class="text-2xl">💍</span>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <h3 class="font-body font-semibold text-gray-800 mb-2">Gold Ring</h3>
-                    <p class="font-body text-gray-600 text-sm mb-3">Elegant gold ring</p>
-                    <p class="font-body text-yellow-600 font-bold text-lg">Rp 3,200,000</p>
-                    <button class="w-full mt-4 bg-yellow-600 hover:bg-yellow-700 text-white py-2 rounded-lg font-body font-medium transition duration-300">
-                        Add to Cart
-                    </button>
-                </div>
-            </div>
-
-            <!-- Product Card 4 -->
-            <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                <div class="aspect-square bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
-                    <div class="w-20 h-16 bg-green-300 rounded-lg flex items-center justify-center">
-                        <span class="text-2xl">📿</span>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <h3 class="font-body font-semibold text-gray-800 mb-2">Silver Bracelet</h3>
-                    <p class="font-body text-gray-600 text-sm mb-3">Modern silver bracelet</p>
-                    <p class="font-body text-yellow-600 font-bold text-lg">Rp 800,000</p>
-                    <button class="w-full mt-4 bg-yellow-600 hover:bg-yellow-700 text-white py-2 rounded-lg font-body font-medium transition duration-300">
-                        Add to Cart
-                    </button>
-                </div>
-            </div>
-
-            <!-- Repeat similar product cards... -->
+                </a>
+            @empty
+                <div class="col-span-4 text-center text-gray-500">No products found.</div>
+            @endforelse
         </div>
 
         <!-- Pagination -->
         <div class="flex justify-center mt-12">
-            <div class="flex gap-2">
-                <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-body">Previous</button>
-                <button class="px-4 py-2 bg-yellow-600 text-white rounded-lg font-body">1</button>
-                <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-body">2</button>
-                <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-body">3</button>
-                <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 font-body">Next</button>
-            </div>
+            {{ $products->links() }}
         </div>
     </div>
 </x-layout>

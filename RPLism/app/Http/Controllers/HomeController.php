@@ -9,6 +9,14 @@ use Illuminate\Support\Str;
 class HomeController extends Controller
 {
     /**
+     * Display the shop page with all products.
+     */
+    public function shop()
+    {
+        $products = Product::active()->paginate(12);
+        return view('homepage.shop', compact('products'));
+    }
+    /**
      * Display the homepage.
      */
     public function index()
@@ -39,6 +47,6 @@ class HomeController extends Controller
             })
             ->paginate(12);
 
-        return view('pages.search', compact('products', 'query'));
+        return view('products.search', compact('products', 'query'));
     }
 }
