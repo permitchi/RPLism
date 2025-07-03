@@ -53,8 +53,13 @@ Route::get('/profile', [ProfileController::class, 'index'])->middleware('auth')-
 
 Route::put('/profile/update', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
 
-// Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::get('/wishlist', function () {
+    return view('pages.wishlist');
+})->middleware('auth')->name('wishlist');
 
+Route::get('/transaction', function () {
+    return view('pages.orderhistory');
+})->middleware('auth')->name('orderhistory');
 
 use App\Http\Controllers\ProductController;
 

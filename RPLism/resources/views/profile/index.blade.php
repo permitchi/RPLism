@@ -5,13 +5,16 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         .form-input {
-            @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-800 focus:border-transparent transition-all text-sm;
+            @apply w-full px-10 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-red-800 focus:border-transparent transition-all text-sm;
+            height: 44px; /* Fixed height for consistent alignment */
+            line-height: 1.2; /* Better line height for text spacing */
         }
         .form-input:disabled {
             @apply bg-gray-100 cursor-not-allowed;
         }
         .form-label {
-            @apply block text-sm font-medium text-gray-700 mb-1;
+            @apply block text-sm font-medium text-gray-700 mb-2;
+            min-height: 20px; /* Consistent label height */
         }
         .avatar-circle {
             width: 80px;
@@ -65,7 +68,7 @@
                     @endif
                 </div>
 
-                <form id="profileForm" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+                <form id="profileForm" method="POST" action="{{ url('/profile/update') }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     
@@ -82,21 +85,21 @@
 
                         <!-- Right side - Form -->
                         <div class="flex-1">
-                            <div class="space-y-6">
+                            <div class="space-y-4">
                                 <!-- Username -->
-                                <div>
+                                <div class="flex flex-col">
                                     <label class="form-label">Username</label>
                                     <input type="text" name="username" value="{{ old('username', $user->username) }}" class="form-input" required>
                                 </div>
                                 
                                 <!-- Email -->
-                                <div>
+                                <div class="flex flex-col">
                                     <label class="form-label">Email</label>
                                     <input type="email" name="email" value="{{ $user->email }}" class="form-input" disabled>
                                 </div>
                                 
                                 <!-- Phone Number -->
-                                <div>
+                                <div class="flex flex-col">
                                     <label class="form-label">Phone Number</label>
                                     <input type="tel" name="phone_num" value="{{ old('phone_num', $user->phone_num) }}" class="form-input" required placeholder="Masukkan nomor telepon">
                                 </div>
@@ -134,20 +137,11 @@
             document.getElementById('imageUpload').click();
         });
 
-        // Phone number formatting
+        // Phone number formatting - simple number only
         document.querySelector('input[name="phone_num"]').addEventListener('input', function(e) {
+            // Only allow numbers
             let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 0) {
-                if (value.length <= 3) {
-                    e.target.value = '+' + value;
-                } else if (value.length <= 6) {
-                    e.target.value = '+' + value.substring(0, 1) + ' ' + value.substring(1);
-                } else if (value.length <= 9) {
-                    e.target.value = '+' + value.substring(0, 1) + ' ' + value.substring(1, 4) + ' ' + value.substring(4);
-                } else {
-                    e.target.value = '+' + value.substring(0, 1) + ' ' + value.substring(1, 4) + ' ' + value.substring(4, 7) + '-' + value.substring(7, 11);
-                }
-            }
+            e.target.value = value;
         });
 
         // Form submission
