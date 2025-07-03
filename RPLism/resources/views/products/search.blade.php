@@ -27,19 +27,24 @@
         </p>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-16">
             @forelse($products as $product)
-                <a href="{{ route('products.show', $product->id) }}" class="block bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                    <div class="aspect-square bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center">
-                        @if($product->image)
-                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover rounded-lg" />
-                        @else
-                            <div class="w-full h-full bg-pink-300 rounded-lg flex items-center justify-center">
-                                <span class="text-2xl">💎</span>
+                <a href="{{ route('products.show', $product->id) }}" class="block bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 h-full">
+                    <div class="flex flex-col h-full">
+                        <div class="aspect-square bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center">
+                            @if($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="w-full h-full object-cover rounded-lg" />
+                            @else
+                                <div class="w-full h-full bg-pink-300 rounded-lg flex items-center justify-center">
+                                    <span class="text-2xl">💎</span>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="flex flex-col flex-1 p-4">
+                            <h3 class="font-body font-semibold text-gray-800 mb-2">{{ $product->name }}</h3>
+                            <p class="font-body text-yellow-600 font-bold mb-4">Rp{{ number_format($product->price, 2, ',', '.') }}</p>
+                            <div class="mt-auto">
+                                <button class="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-2 rounded-lg font-body font-medium transition duration-300" onclick="event.preventDefault();">Add to Cart</button>
                             </div>
-                        @endif
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-body font-semibold text-gray-800">{{ $product->name }}</h3>
-                        <p class="font-body text-yellow-600 font-bold">Rp{{ number_format($product->price, 2, ',', '.') }}</p>
+                        </div>
                     </div>
                 </a>
             @empty

@@ -37,7 +37,19 @@
                                 </td>
                                 <td class="px-6 py-4 border-b">{{ $product->created_at->format('Y-m-d') }}</td>
                                 <td class="px-6 py-4 border-b text-center">
-                                    <button class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-4 rounded">Edit</button>
+                                    <a href="{{ route('editproduct', ['id' => $product->id]) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-4 rounded mr-2">Edit</a>
+                                </td>
+                                <td class="px-6 py-4 border-b text-center">
+                                <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" onclick="return confirm('Are you sure you want to delete this product?')" class="align-middle">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500 hover:text-red-700 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                            </svg>
+                                            Delete
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @empty

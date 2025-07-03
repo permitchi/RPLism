@@ -80,6 +80,9 @@ Route::get('/search', [HomeController::class, 'search'])
 Route::get('/products/{id}', [ProductController::class, 'show'])
     ->middleware('auth')->name('products.show');
 
+Route::delete('/products/{id}', [ProductController::class, 'destroy'])
+->middleware('auth')->name('products.destroy');
+
 
 
 require __DIR__.'/settings.php';

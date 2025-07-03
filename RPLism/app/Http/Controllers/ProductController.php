@@ -8,6 +8,26 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
+    public function destroy($id)
+    {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            abort(403, 'Unauthorized action.');
+        }
+        $product = Product::findOrFail($id);
+        $product->delete();
+        return redirect()->route('products.myproducts')->with('success', 'Product deleted successfully.');
+    }
+    /**
+     * Display a listing of all products for admin.
+     */
+    public function myProducts()
+    {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            abort(403, 'Unauthorized action.');
+        }
+        $products = Product::orderBy('created_at', 'desc')->get();
+        return view('pages.myproducts', compact('products'));
+    }
     /**
      * Store a newly created product in storage.
      */
