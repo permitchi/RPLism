@@ -1,12 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-<<<<<<< HEAD
 use App\Http\Controllers\ProfileController;
-=======
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
->>>>>>> a467738ffe612b6806b424e8fada174de3d33340
 
 Route::get('/', function () {
     if (Auth::check()) {
