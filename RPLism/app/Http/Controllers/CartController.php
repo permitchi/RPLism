@@ -46,10 +46,10 @@ class CartController extends Controller
         // Get or create cart from session
         $cart = session()->get('cart', []);
 
+
         // If product already exists in cart, update quantity
         if (isset($cart[$request->product_id])) {
             $newQuantity = $cart[$request->product_id]['quantity'] + $request->quantity;
-            
             // Check if total quantity doesn't exceed stock
             if ($newQuantity > $product->stock) {
                 return response()->json([
@@ -57,7 +57,6 @@ class CartController extends Controller
                     'message' => 'Cannot add more items. Maximum available: ' . $product->stock
                 ], 400);
             }
-            
             $cart[$request->product_id]['quantity'] = $newQuantity;
         } else {
             // Add new product to cart
@@ -70,6 +69,10 @@ class CartController extends Controller
                 'stock' => $product->stock
             ];
         }
+
+        // Decrement product stock by the quantity added to cart
+        $product->stock -= $request->quantity;
+        $product->save();
 
         // Save cart to session
         session()->put('cart', $cart);

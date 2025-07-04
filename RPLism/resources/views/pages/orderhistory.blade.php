@@ -68,10 +68,6 @@
                                             <p class="font-body font-semibold text-gray-800">Order #MII{{ $order->id }}</p>
                                             <p class="font-body text-sm text-gray-600">{{ $order->created_at->format('M d, Y \a\t H:i') }}</p>
                                         </div>
-                                        <div>
-                                            <p class="font-body text-sm text-gray-600">Total Amount</p>
-                                            <p class="font-body font-bold text-yellow-600 text-lg">Rp {{ number_format($order->total ?? 0, 0, ',', '.') }}</p>
-                                        </div>
                                     </div>
                                     <div class="flex items-center gap-4">
                                         @switch($order->status)
