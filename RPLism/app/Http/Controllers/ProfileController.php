@@ -27,6 +27,7 @@ class ProfileController extends Controller
         $request->validate([
             'username' => ['required', 'string', 'max:255', 'unique:users,username,' . $user->id],
             'phone_num' => ['required', 'string', 'max:20'],
+            'address' => ['required', 'string', 'max:255'],
             'profile_picture' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
         ]);
 
@@ -34,12 +35,17 @@ class ProfileController extends Controller
         User::where('id', $user->id)->update([
             'username' => $request->username,
             'phone_num' => $request->phone_num,
+            'address' => $request->address,
         ]);
+
 
         // Handle profile picture upload if provided
         if ($request->hasFile('profile_picture')) {
-            // You can implement file storage logic here
-            // For now, we'll just validate that the file was uploaded
+            $image = $request->file('profile_picture');
+            $imagePath = $image->store('profile_pictures', 'public');
+            // Save the image path to the user (column: pfp_image)
+            $user->pfp_image = $imagePath;
+            $user->save();
         }
 
         return redirect()->route('profile')->with('success', 'Profile updated successfully!');

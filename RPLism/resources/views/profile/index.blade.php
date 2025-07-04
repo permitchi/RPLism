@@ -103,6 +103,12 @@
                                     <label class="form-label">Phone Number</label>
                                     <input type="tel" name="phone_num" value="{{ old('phone_num', $user->phone_num) }}" class="form-input" required placeholder="Masukkan nomor telepon">
                                 </div>
+
+                                <!-- Address Fields -->
+                                <div class="flex flex-col">
+                                    <label class="form-label">Address</label>
+                                    <input type="text" name="address" value="{{ old('address', $user->address) }}" class="form-input" placeholder="Street Address" required>
+                                </div>
                             </div>
                             
                             <!-- Save Button -->

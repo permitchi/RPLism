@@ -51,13 +51,14 @@
                             <!-- Product Details -->
                             <div class="p-6">
                                 <h3 class="font-body font-semibold text-gray-800 mb-2 text-lg">{{ $item->name }}</h3>
-                                @if($item->description)
-                                    <p class="font-body text-gray-600 text-sm mb-3 line-clamp-2">{{ $item->description }}</p>
-                                @endif
-                                <div class="flex justify-between items-center mb-4">
+                                <div class="flex justify-between items-center mb-2">
                                     <p class="font-body text-yellow-600 font-bold text-xl">
                                         Rp {{ number_format($item->price, 0, ',', '.') }}
                                     </p>
+                                </div>
+                                @if($item->description)
+                                    <p class="font-body text-gray-600 text-sm mb-3 line-clamp-2">{{ $item->description }}</p>
+                                @endif
                                     @if($item->stock > 0)
                                         <span class="text-green-600 text-sm font-body">In Stock</span>
                                     @else
@@ -67,11 +68,7 @@
 
                                 <!-- Action Buttons -->
                                 <div class="flex gap-2">
-                                    <button onclick="addToCart({{ $item->id }})" 
-                                            class="flex-1 bg-yellow-600 hover:bg-yellow-700 text-white py-3 px-4 rounded-lg font-body font-medium transition duration-300 {{ $item->stock <= 0 ? 'opacity-50 cursor-not-allowed' : '' }}"
-                                            {{ $item->stock <= 0 ? 'disabled' : '' }}>
-                                        Add to Cart
-                                    </button>
+                                    <!-- Add to Cart button removed -->
                                     <a href="{{ route('product.show', $item->id) }}" 
                                        class="flex-shrink-0 bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 px-4 rounded-lg transition duration-300">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

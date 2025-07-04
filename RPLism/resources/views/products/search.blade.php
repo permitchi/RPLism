@@ -41,9 +41,7 @@
                         <div class="flex flex-col flex-1 p-4">
                             <h3 class="font-body font-semibold text-gray-800 mb-2">{{ $product->name }}</h3>
                             <p class="font-body text-yellow-600 font-bold mb-4">Rp{{ number_format($product->price, 2, ',', '.') }}</p>
-                            <div class="mt-auto">
-                                <button class="w-full bg-yellow-600 hover:bg-yellow-700 text-white py-2 rounded-lg font-body font-medium transition duration-300" onclick="event.preventDefault();">Add to Cart</button>
-                            </div>
+                            <!-- Add to Cart button removed -->
                         </div>
                     </div>
                 </a>
