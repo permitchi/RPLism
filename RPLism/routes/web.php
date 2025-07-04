@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
@@ -67,9 +68,10 @@ Route::get('/profile', [ProfileController::class, 'index'])->middleware('auth')-
 
 Route::put('/profile/update', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update.main');
 
-Route::get('/wishlist', function () {
-    return view('pages.wishlist');
-})->middleware('auth')->name('wishlist');
+Route::get('/wishlist', [WishlistController::class, 'index'])->middleware('auth')->name('wishlist');
+Route::post('/wishlist/add', [WishlistController::class, 'add'])->middleware('auth')->name('wishlist.add');
+Route::delete('/wishlist/remove/{productId}', [WishlistController::class, 'remove'])->middleware('auth')->name('wishlist.remove');
+Route::delete('/wishlist/clear', [WishlistController::class, 'clear'])->middleware('auth')->name('wishlist.clear');
 
 
 // Admin Orders Page

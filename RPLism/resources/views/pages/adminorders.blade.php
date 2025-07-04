@@ -54,7 +54,7 @@
                     @foreach($orders as $order)
                         <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300 order-item" 
                              data-status="{{ $order->status }}" 
-                             data-date="{{ $order->created_at->format('Y-m-d') }}"
+                             data-date="{{ $order->created_at ? $order->created_at->format('Y-m-d') : '' }}"
                              data-search="{{ strtolower($order->order_number . ' ' . $order->items->pluck('product.name')->implode(' ')) }}">
                             <!-- Order Header -->
                             <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b">
@@ -62,7 +62,7 @@
                                     <div class="flex flex-col md:flex-row gap-6">
                                         <div>
                                             <p class="font-body font-semibold text-gray-800">Order #{{ $order->order_number }}</p>
-                                            <p class="font-body text-sm text-gray-600">{{ $order->created_at->format('M d, Y \a\t H:i') }}</p>
+                                            <p class="font-body text-sm text-gray-600">{{ $order->created_at ? $order->created_at->format('M d, Y \a\t H:i') : 'N/A' }}</p>
                                         </div>
                                         <div>
                                             <p class="font-body text-sm text-gray-600">Total Amount</p>

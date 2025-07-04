@@ -1,5 +1,33 @@
 <head>
     <title>Wishlist - MIINACCI</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <style>
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .line-clamp-3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .wishlist-card {
+            height: 500px; /* Fixed height for all cards */
+            display: flex;
+            flex-direction: column;
+        }
+        .wishlist-card .card-image {
+            height: 250px; /* Fixed height for image section */
+        }
+        .wishlist-card .card-content {
+            height: 250px; /* Fixed height for content section */
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
 </head>
 
 <x-layout>
@@ -11,12 +39,12 @@
         </div>
 
         @auth
-            @if(isset($wishlistItems) && $wishlistItems->count() > 0)
+            @if(isset($wishlists) && $wishlists->count() > 0)
                 <!-- Wishlist Items Count -->
                 <div class="flex justify-between items-center mb-8">
                     <div class="font-body text-gray-700">
-                        <span class="text-xl font-semibold">{{ $wishlistItems->count() }}</span> 
-                        <span class="text-gray-600">{{ $wishlistItems->count() === 1 ? 'item' : 'items' }} in your wishlist</span>
+                        <span class="text-xl font-semibold">{{ $wishlists->count() }}</span> 
+                        <span class="text-gray-600">{{ $wishlists->count() === 1 ? 'item' : 'items' }} in your wishlist</span>
                     </div>
                     <button onclick="clearWishlist()" class="text-red-600 hover:text-red-800 font-body text-sm transition duration-300">
                         Clear All
@@ -25,8 +53,9 @@
 
                 <!-- Wishlist Products Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                    @foreach($wishlistItems as $item)
-                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 relative group">
+                    @foreach($wishlists as $wishlist)
+                        @php $item = $wishlist->product; @endphp
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 relative group wishlist-card">
                             <!-- Remove from Wishlist Button -->
                             <button onclick="removeFromWishlist({{ $item->id }})" 
                                     class="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-red-50">
@@ -36,29 +65,32 @@
                             </button>
 
                             <!-- Product Image -->
-                            <div class="aspect-square bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center">
+                            <div class="card-image bg-gradient-to-br from-pink-100 to-pink-200 flex items-center justify-center">
                                 @if($item->image)
                                     <img src="{{ asset('storage/' . $item->image) }}" 
                                          alt="{{ $item->name }}" 
-                                         class="w-24 h-20 object-contain rounded-lg" />
+                                         class="w-full h-full object-cover" />
                                 @else
-                                    <div class="w-24 h-20 bg-pink-300 rounded-lg flex items-center justify-center">
-                                        <span class="text-3xl">💎</span>
+                                    <div class="w-full h-full bg-pink-300 flex items-center justify-center">
+                                        <span class="text-6xl">💎</span>
                                     </div>
                                 @endif
                             </div>
 
                             <!-- Product Details -->
-                            <div class="p-6">
-                                <h3 class="font-body font-semibold text-gray-800 mb-2 text-lg">{{ $item->name }}</h3>
-                                <div class="flex justify-between items-center mb-2">
+                            <div class="card-content p-6">
+                                <h3 class="font-body font-semibold text-gray-800 mb-2 text-lg line-clamp-2 flex-shrink-0">{{ $item->name }}</h3>
+                                <div class="flex justify-between items-center mb-2 flex-shrink-0">
                                     <p class="font-body text-yellow-600 font-bold text-xl">
                                         Rp {{ number_format($item->price, 0, ',', '.') }}
                                     </p>
                                 </div>
                                 @if($item->description)
-                                    <p class="font-body text-gray-600 text-sm mb-3 line-clamp-2">{{ $item->description }}</p>
+                                    <p class="font-body text-gray-600 text-sm mb-3 line-clamp-3 flex-grow">{{ $item->description }}</p>
+                                @else
+                                    <div class="flex-grow"></div>
                                 @endif
+                                <div class="flex-shrink-0">
                                     @if($item->stock > 0)
                                         <span class="text-green-600 text-sm font-body">In Stock</span>
                                     @else
@@ -67,11 +99,10 @@
                                 </div>
 
                                 <!-- Action Buttons -->
-                                <div class="flex gap-2">
-                                    <!-- Add to Cart button removed -->
-                                    <a href="{{ route('product.show', $item->id) }}" 
-                                       class="flex-shrink-0 bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 px-4 rounded-lg transition duration-300">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="flex gap-2 mt-4 flex-shrink-0">
+                                    <a href="{{ route('products.show', $item->id) }}" 
+                                       class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 py-3 px-4 rounded-lg transition duration-300 text-center">
+                                        <svg class="w-5 h-5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                         </svg>
@@ -145,20 +176,20 @@
                                 @if($product->image)
                                     <img src="{{ asset('storage/' . $product->image) }}" 
                                          alt="{{ $product->name }}" 
-                                         class="w-20 h-16 object-contain rounded-lg" />
+                                         class="w-full h-full object-cover" />
                                 @else
-                                    <div class="w-20 h-16 bg-pink-300 rounded-lg flex items-center justify-center">
-                                        <span class="text-2xl">💎</span>
+                                    <div class="w-full h-full bg-pink-300 flex items-center justify-center">
+                                        <span class="text-6xl">💎</span>
                                     </div>
                                 @endif
                             </div>
-                            <div class="p-4">
-                                <h3 class="font-body font-semibold text-gray-800 mb-2">{{ $product->name }}</h3>
-                                <p class="font-body text-yellow-600 font-bold">
+                            <div class="p-4 h-32 flex flex-col">
+                                <h3 class="font-body font-semibold text-gray-800 mb-2 line-clamp-2 flex-grow">{{ $product->name }}</h3>
+                                <p class="font-body text-yellow-600 font-bold flex-shrink-0">
                                     Rp {{ number_format($product->price, 0, ',', '.') }}
                                 </p>
                                 <button onclick="addToWishlist({{ $product->id }})" 
-                                        class="mt-3 w-full bg-gray-100 hover:bg-yellow-100 text-gray-700 py-2 rounded-lg font-body text-sm transition duration-300">
+                                        class="mt-3 w-full bg-gray-100 hover:bg-yellow-100 text-gray-700 py-2 rounded-lg font-body text-sm transition duration-300 flex-shrink-0">
                                     Add to Wishlist
                                 </button>
                             </div>
@@ -198,12 +229,16 @@
 
         function addToCart(productId) {
             // Send AJAX request to add item to cart
-            fetch(`/cart/add/${productId}`, {
+            fetch('/cart/add', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({
+                    product_id: productId,
+                    quantity: 1
+                })
             })
             .then(response => response.json())
             .then(data => {
@@ -221,12 +256,15 @@
 
         function addToWishlist(productId) {
             // Send AJAX request to add item to wishlist
-            fetch(`/wishlist/add/${productId}`, {
+            fetch('/wishlist/add', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({
+                    product_id: productId
+                })
             })
             .then(response => response.json())
             .then(data => {

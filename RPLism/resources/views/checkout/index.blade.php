@@ -36,31 +36,7 @@
             <p class="text-gray-600 font-body">Complete your purchase</p>
         </div>
 
-        <!-- Checkout Steps -->
-        <div class="flex justify-center mb-8">
-            <div class="flex items-center space-x-8">
-                <div class="checkout-step active">
-                    <div class="w-8 h-8 bg-red-800 text-white rounded-full flex items-center justify-center mr-2">
-                        1
-                    </div>
-                    <span>Shipping Information</span>
-                </div>
-                <div class="w-16 h-1 bg-gray-300"></div>
-                <div class="checkout-step">
-                    <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center mr-2">
-                        2
-                    </div>
-                    <span>Payment</span>
-                </div>
-                <div class="w-16 h-1 bg-gray-300"></div>
-                <div class="checkout-step">
-                    <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center mr-2">
-                        3
-                    </div>
-                    <span>Order Review</span>
-                </div>
-            </div>
-        </div>
+
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Left Column - Checkout Form -->

@@ -54,7 +54,7 @@
                 </div>
                 <p class="text-2xl text-yellow-600 font-bold mb-4">Rp{{ number_format($product->price, 2, ',', '.') }}</p>
                 <p class="text-lg text-gray-700 mb-4">{{ $product->description }}</p>
-                <div class="mb-4 text-gray-500 text-sm">Added on: {{ $product->created_at->format('Y-m-d') }}</div>
+                <div class="mb-4 text-gray-500 text-sm">Added on: {{ $product->created_at ? $product->created_at->format('Y-m-d') : 'N/A' }}</div>
                 
                 <!-- Stock Information -->
                 <div class="mb-4">
@@ -216,12 +216,20 @@
                 if (data.success) {
                     showMessage('Product added to wishlist!', 'success');
                     
-                    // Change button appearance to indicate it's added
-                    this.classList.add('bg-yellow-500', 'text-white');
-                    this.classList.remove('bg-white', 'text-yellow-500');
-                    this.innerHTML = '<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>';
+                    // Redirect to wishlist page after a short delay
+                    setTimeout(() => {
+                        window.location.href = '{{ route("wishlist") }}';
+                    }, 1000);
                 } else {
-                    throw new Error(data.message || 'Failed to add product to wishlist');
+                    if (data.message.includes('already in your wishlist')) {
+                        // If already in wishlist, just redirect to wishlist page
+                        showMessage('Product is already in your wishlist. Redirecting...', 'info');
+                        setTimeout(() => {
+                            window.location.href = '{{ route("wishlist") }}';
+                        }, 1000);
+                    } else {
+                        throw new Error(data.message || 'Failed to add product to wishlist');
+                    }
                 }
             })
             .catch(error => {
@@ -242,7 +250,12 @@
             }
             
             const messageDiv = document.createElement('div');
-            const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+            let bgColor = 'bg-green-500';
+            if (type === 'error') {
+                bgColor = 'bg-red-500';
+            } else if (type === 'info') {
+                bgColor = 'bg-blue-500';
+            }
             messageDiv.className = `${bgColor} text-white px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
             messageDiv.textContent = message;
             

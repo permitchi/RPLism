@@ -35,7 +35,9 @@
                                         <span class="text-gray-500">No</span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 border-b">{{ $product->created_at->format('Y-m-d') }}</td>
+                                <td class="px-6 py-4 border-b">
+                                    {{ $product->created_at ? $product->created_at->format('Y-m-d') : 'N/A' }}
+                                </td>
                                 <td class="px-6 py-4 border-b text-center">
                                     <a href="{{ route('editproduct', ['id' => $product->id]) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-4 rounded mr-2">Edit</a>
                                 </td>
