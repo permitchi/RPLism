@@ -75,7 +75,10 @@
                     <div class="flex gap-8">
                         <!-- Left side - Avatar -->
                         <div class="flex-shrink-0">
-                            <div class="avatar-circle" id="avatarPreview" style="background-image: url('https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face');"></div>
+                            {{-- <div class="avatar-circle" id="avatarPreview" style="background-image: url('https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face');"></div> --}}
+                    <div class="avatar-circle" id="avatarPreview"
+                        style="background-image: url('{{ $user->pfp_image ? asset('storage/' . $user->pfp_image) : 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face' }}');">
+                    </div>
                             <input type="file" id="imageUpload" name="profile_picture" accept=".png, .jpg, .jpeg" style="display: none;" />
                             <div class="text-center mt-3">
                                 <p class="text-sm text-gray-600 font-medium">Role</p>

@@ -55,6 +55,7 @@
 
                 <form id="checkoutForm" method="POST" action="{{ route('checkout.process') }}">
                     @csrf
+                    <input type="hidden" name="order_total" id="orderTotalInput" value="0">
                     
                     <!-- Shipping Information -->
                     <div class="bg-white rounded-lg card-shadow p-6 mb-6">
@@ -63,37 +64,37 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label class="form-label">First Name *</label>
-                                <input type="text" name="first_name" class="form-input" value="{{ old('first_name', $user->first_name ?? '') }}" required>
+                                <input type="text" name="first_name" class="form-input border-2 border-black" style="box-sizing:border-box;" value="{{ old('first_name', $user->first_name ?? '') }}" required>
                             </div>
                             <div>
                                 <label class="form-label">Last Name *</label>
-                                <input type="text" name="last_name" class="form-input" value="{{ old('last_name', $user->last_name ?? '') }}" required>
+                                <input type="text" name="last_name" class="form-input border-2 border-black" style="box-sizing:border-box;" value="{{ old('last_name', $user->last_name ?? '') }}" required>
                             </div>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label">Email Address *</label>
-                            <input type="email" name="email" class="form-input" value="{{ old('email', $user->email ?? '') }}" required>
+                            <input type="email" name="email" class="form-input border-2 border-black" style="box-sizing:border-box;" value="{{ old('email', $user->email ?? '') }}" required>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label">Phone Number *</label>
-                            <input type="tel" name="phone" class="form-input" value="{{ old('phone', $user->phone_num ?? '') }}" required>
+                            <input type="tel" name="phone" class="form-input border-2 border-black" style="box-sizing:border-box;" value="{{ old('phone', $user->phone_num ?? '') }}" required>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label">Street Address *</label>
-                            <input type="text" name="address" class="form-input" placeholder="Street address, apartment, suite, etc." value="{{ old('address', $user->street_address ?? '') }}" required>
+                            <input type="text" name="address" class="form-input border-2 border-black" style="box-sizing:border-box;" placeholder="Street address, apartment, suite, etc." value="{{ old('address', $user->street_address ?? '') }}" required>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                             <div>
                                 <label class="form-label">City *</label>
-                                <input type="text" name="city" class="form-input" value="{{ old('city', $user->city ?? '') }}" required>
+                                <input type="text" name="city" class="form-input border-2 border-black" style="box-sizing:border-box;" value="{{ old('city', $user->city ?? '') }}" required>
                             </div>
                             <div>
                                 <label class="form-label">State/Province *</label>
-                                <select name="state" class="form-input" required>
+                                <select name="state" class="form-input border-2 border-black" style="box-sizing:border-box;" required>
                                     <option value="">Select State</option>
                                     <option value="DKI Jakarta" {{ old('state', $user->state ?? '') == 'DKI Jakarta' ? 'selected' : '' }}>DKI Jakarta</option>
                                     <option value="Jawa Barat" {{ old('state', $user->state ?? '') == 'Jawa Barat' ? 'selected' : '' }}>Jawa Barat</option>
@@ -106,13 +107,13 @@
                             </div>
                             <div>
                                 <label class="form-label">Postal Code *</label>
-                                <input type="text" name="postal_code" class="form-input" value="{{ old('postal_code', $user->postal_code ?? '') }}" required>
+                                <input type="text" name="postal_code" class="form-input border-2 border-black" style="box-sizing:border-box;" value="{{ old('postal_code', $user->postal_code ?? '') }}" required>
                             </div>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label">Country *</label>
-                            <select name="country" class="form-input" required>
+                            <select name="country" class="form-input border-2 border-black" style="box-sizing:border-box;" required>
                                 <option value="Indonesia" {{ old('country', $user->country ?? 'Indonesia') == 'Indonesia' ? 'selected' : '' }}>Indonesia</option>
                                 <option value="Malaysia" {{ old('country', $user->country ?? '') == 'Malaysia' ? 'selected' : '' }}>Malaysia</option>
                                 <option value="Singapore" {{ old('country', $user->country ?? '') == 'Singapore' ? 'selected' : '' }}>Singapore</option>
@@ -237,9 +238,9 @@
                 <div class="bg-white rounded-lg card-shadow p-6">
                     <h2 class="text-2xl font-logo font-semibold text-gray-800 mb-6">Order Summary</h2>
                     
-                    <!-- Sample Cart Items -->
+                    <!-- Cart Items List (No product images) -->
                     <div id="checkoutItems" class="space-y-4 mb-6">
-                        <!-- Items will be loaded dynamically from localStorage -->
+                        <!-- Items will be loaded dynamically from localStorage, but product images are hidden/removed -->
                     </div>
 
                     <!-- Order Totals -->
@@ -403,6 +404,20 @@
             }
             
             console.log('Form validation passed, submitting...');
+
+            // Set the order total in the hidden input before submitting
+            let subtotal = 0;
+            selectedItems.forEach(item => {
+                subtotal += item.price * item.quantity;
+            });
+            let shippingCost = 0;
+            const shippingMethod = document.querySelector('input[name="shipping_method"]:checked');
+            if (shippingMethod) {
+                if (shippingMethod.value === 'express') shippingCost = 50000;
+                else if (shippingMethod.value === 'overnight') shippingCost = 100000;
+            }
+            const total = subtotal + shippingCost;
+            document.getElementById('orderTotalInput').value = total;
             
             // Show loading state
             const submitBtn = this.querySelector('button[type="submit"]') || document.querySelector('button[form="checkoutForm"]');
