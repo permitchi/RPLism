@@ -11,13 +11,19 @@
             @apply text-green-600;
         }
         .form-input {
-            @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-800 focus:border-transparent transition-all;
+            @apply w-full px-4 py-3 border-2 border-gray-400 rounded-lg focus:ring-2 focus:ring-red-800 focus:border-red-800 transition-all;
         }
         .form-label {
             @apply block text-sm font-medium text-gray-700 mb-2;
         }
         .card-shadow {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .payment-qr-section {
+            @apply mt-4 transition-all duration-300;
+        }
+        .payment-qr-section.hidden {
+            @apply hidden;
         }
     </style>
 </head>
@@ -59,6 +65,18 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Left Column - Checkout Form -->
             <div class="lg:col-span-2">
+                <!-- Error Messages -->
+                @if ($errors->any())
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+                        <strong>Please correct the following errors:</strong>
+                        <ul class="mt-2 list-disc list-inside">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <form id="checkoutForm" method="POST" action="{{ route('checkout.process') }}">
                     @csrf
                     
@@ -69,59 +87,59 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label class="form-label">First Name *</label>
-                                <input type="text" name="first_name" class="form-input" required>
+                                <input type="text" name="first_name" class="form-input" value="{{ old('first_name', $user->first_name ?? '') }}" required>
                             </div>
                             <div>
                                 <label class="form-label">Last Name *</label>
-                                <input type="text" name="last_name" class="form-input" required>
+                                <input type="text" name="last_name" class="form-input" value="{{ old('last_name', $user->last_name ?? '') }}" required>
                             </div>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label">Email Address *</label>
-                            <input type="email" name="email" class="form-input" required>
+                            <input type="email" name="email" class="form-input" value="{{ old('email', $user->email ?? '') }}" required>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label">Phone Number *</label>
-                            <input type="tel" name="phone" class="form-input" required>
+                            <input type="tel" name="phone" class="form-input" value="{{ old('phone', $user->phone_num ?? '') }}" required>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label">Street Address *</label>
-                            <input type="text" name="address" class="form-input" placeholder="Street address, apartment, suite, etc." required>
+                            <input type="text" name="address" class="form-input" placeholder="Street address, apartment, suite, etc." value="{{ old('address', $user->street_address ?? '') }}" required>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                             <div>
                                 <label class="form-label">City *</label>
-                                <input type="text" name="city" class="form-input" required>
+                                <input type="text" name="city" class="form-input" value="{{ old('city', $user->city ?? '') }}" required>
                             </div>
                             <div>
                                 <label class="form-label">State/Province *</label>
                                 <select name="state" class="form-input" required>
                                     <option value="">Select State</option>
-                                    <option value="DKI Jakarta">DKI Jakarta</option>
-                                    <option value="Jawa Barat">Jawa Barat</option>
-                                    <option value="Jawa Tengah">Jawa Tengah</option>
-                                    <option value="Jawa Timur">Jawa Timur</option>
-                                    <option value="Banten">Banten</option>
-                                    <option value="Yogyakarta">Yogyakarta</option>
+                                    <option value="DKI Jakarta" {{ old('state', $user->state ?? '') == 'DKI Jakarta' ? 'selected' : '' }}>DKI Jakarta</option>
+                                    <option value="Jawa Barat" {{ old('state', $user->state ?? '') == 'Jawa Barat' ? 'selected' : '' }}>Jawa Barat</option>
+                                    <option value="Jawa Tengah" {{ old('state', $user->state ?? '') == 'Jawa Tengah' ? 'selected' : '' }}>Jawa Tengah</option>
+                                    <option value="Jawa Timur" {{ old('state', $user->state ?? '') == 'Jawa Timur' ? 'selected' : '' }}>Jawa Timur</option>
+                                    <option value="Banten" {{ old('state', $user->state ?? '') == 'Banten' ? 'selected' : '' }}>Banten</option>
+                                    <option value="Yogyakarta" {{ old('state', $user->state ?? '') == 'Yogyakarta' ? 'selected' : '' }}>Yogyakarta</option>
                                     <!-- Add more states as needed -->
                                 </select>
                             </div>
                             <div>
                                 <label class="form-label">Postal Code *</label>
-                                <input type="text" name="postal_code" class="form-input" required>
+                                <input type="text" name="postal_code" class="form-input" value="{{ old('postal_code', $user->postal_code ?? '') }}" required>
                             </div>
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label">Country *</label>
                             <select name="country" class="form-input" required>
-                                <option value="Indonesia">Indonesia</option>
-                                <option value="Malaysia">Malaysia</option>
-                                <option value="Singapore">Singapore</option>
+                                <option value="Indonesia" {{ old('country', $user->country ?? 'Indonesia') == 'Indonesia' ? 'selected' : '' }}>Indonesia</option>
+                                <option value="Malaysia" {{ old('country', $user->country ?? '') == 'Malaysia' ? 'selected' : '' }}>Malaysia</option>
+                                <option value="Singapore" {{ old('country', $user->country ?? '') == 'Singapore' ? 'selected' : '' }}>Singapore</option>
                                 <!-- Add more countries as needed -->
                             </select>
                         </div>
@@ -174,19 +192,7 @@
                         
                         <div class="space-y-4 mb-6">
                             <label class="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="radio" name="payment_method" value="credit_card" class="mr-3 text-red-800 focus:ring-red-800" checked>
-                                <div class="flex items-center">
-                                    <svg class="w-8 h-6 mr-3" viewBox="0 0 32 24" fill="none">
-                                        <rect width="32" height="24" rx="3" fill="#1A73E8"/>
-                                        <rect x="2" y="8" width="28" height="2" fill="white"/>
-                                        <rect x="2" y="14" width="8" height="1" fill="white"/>
-                                    </svg>
-                                    <span class="font-semibold text-gray-800">Credit/Debit Card</span>
-                                </div>
-                            </label>
-
-                            <label class="flex items-center p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="radio" name="payment_method" value="bank_transfer" class="mr-3 text-red-800 focus:ring-red-800">
+                                <input type="radio" name="payment_method" value="bank_transfer" class="mr-3 text-red-800 focus:ring-red-800" checked>
                                 <div class="flex items-center">
                                     <svg class="w-8 h-6 mr-3" viewBox="0 0 32 24" fill="none">
                                         <rect width="32" height="24" rx="3" fill="#00AA45"/>
@@ -209,27 +215,35 @@
                             </label>
                         </div>
 
-                        <!-- Credit Card Fields -->
-                        <div id="creditCardFields" class="space-y-4">
-                            <div>
-                                <label class="form-label">Card Number *</label>
-                                <input type="text" name="card_number" class="form-input" placeholder="1234 5678 9012 3456" maxlength="19">
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
-                                    <label class="form-label">Expiry Date *</label>
-                                    <input type="text" name="expiry_date" class="form-input" placeholder="MM/YY" maxlength="5">
+                        <!-- Bank Transfer QR Code -->
+                        <div id="bankTransferQR" class="payment-qr-section">
+                            <div class="bg-gray-50 rounded-lg p-6 text-center">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-4">Bank Transfer - BCA</h3>
+                                <div class="bg-white p-4 rounded-lg inline-block shadow-sm">
+                                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHg9IjEwIiB5PSIxMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjMDAwMDAwIi8+CjxyZWN0IHg9IjMwIiB5PSIxMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjMDAwMDAwIi8+CjxyZWN0IHg9IjUwIiB5PSIxMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjMDAwMDAwIi8+CjxyZWN0IHg9IjcwIiB5PSIxMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjMDAwMDAwIi8+CjxyZWN0IHg9IjkwIiB5PSIxMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjMDAwMDAwIi8+CjxyZWN0IHg9IjExMCIgeT0iMTAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iIzAwMDAwMCIvPgo8cmVjdCB4PSIxMzAiIHk9IjEwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IiMwMDAwMDAiLz4KPHJlY3QgeD0iMTAiIHk9IjMwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IiMwMDAwMDAiLz4KPHJlY3QgeD0iNzAiIHk9IjMwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IiMwMDAwMDAiLz4KPHJlY3QgeD0iMTMwIiB5PSIzMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjMDAwMDAwIi8+Cjx0ZXh0IHg9Ijc1IiB5PSI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzAwMDAwMCI+QkNBPC90ZXh0Pgo8dGV4dCB4PSI3NSIgeT0iOTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZvbnQtc2l6ZT0iMTAiIGZpbGw9IiMwMDAwMDAiPjEyMzQ1Njc4OTA8L3RleHQ+CjwvdGV2Zz4=" 
+                                         alt="BCA QR Code" class="w-32 h-32 mx-auto">
                                 </div>
-                                <div>
-                                    <label class="form-label">CVV *</label>
-                                    <input type="text" name="cvv" class="form-input" placeholder="123" maxlength="4">
+                                <div class="mt-4">
+                                    <p class="text-sm text-gray-600 mb-2">Bank Central Asia (BCA)</p>
+                                    <p class="text-lg font-mono font-bold text-gray-800">1234567890</p>
+                                    <p class="text-sm text-gray-600">a.n. MIINACCI STORE</p>
                                 </div>
                             </div>
+                        </div>
 
-                            <div>
-                                <label class="form-label">Cardholder Name *</label>
-                                <input type="text" name="cardholder_name" class="form-input" placeholder="Name as it appears on card">
+                        <!-- E-Wallet QR Code -->
+                        <div id="eWalletQR" class="payment-qr-section hidden">
+                            <div class="bg-gray-50 rounded-lg p-6 text-center">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-4">E-Wallet Payment</h3>
+                                <div class="bg-white p-4 rounded-lg inline-block shadow-sm">
+                                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiBmaWxsPSIjRkZGRkZGIi8+CjxyZWN0IHg9IjIwIiB5PSIyMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjMDAwMDAwIi8+CjxyZWN0IHg9IjQwIiB5PSIyMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjMDAwMDAwIi8+CjxyZWN0IHg9IjgwIiB5PSIyMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjMDAwMDAwIi8+CjxyZWN0IHg9IjEwMCIgeT0iMjAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iIzAwMDAwMCIvPgo8cmVjdCB4PSIxMjAiIHk9IjIwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IiMwMDAwMDAiLz4KPHJlY3QgeD0iMjAiIHk9IjQwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IiMwMDAwMDAiLz4KPHJlY3QgeD0iNjAiIHk9IjQwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IiMwMDAwMDAiLz4KPHJlY3QgeD0iMTIwIiB5PSI0MCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjMDAwMDAwIi8+CjxjaXJjbGUgY3g9Ijc1IiBjeT0iNzUiIHI9IjE1IiBmaWxsPSIjRkY2QjM1Ii8+Cjx0ZXh0IHg9Ijc1IiB5PSI4MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxNCIgZmlsbD0iI0ZGRkZGRiI+ZTwvdGV4dD4KPHRleHQgeD0iNzUiIHk9IjExMCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzAwMDAwMCI+R29QYXkgLyBPVk8gLyBEYW5hPC90ZXh0Pgo8L3N2Zz4=" 
+                                         alt="E-Wallet QR Code" class="w-32 h-32 mx-auto">
+                                </div>
+                                <div class="mt-4">
+                                    <p class="text-sm text-gray-600 mb-2">Scan with your E-Wallet app</p>
+                                    <p class="text-lg font-semibold text-gray-800">GoPay / OVO / Dana</p>
+                                    <p class="text-sm text-gray-600">MIINACCI STORE</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -244,7 +258,7 @@
 
             <!-- Right Column - Order Summary -->
             <div class="lg:col-span-1">
-                <div class="bg-white rounded-lg card-shadow p-6 sticky top-4">
+                <div class="bg-white rounded-lg card-shadow p-6">
                     <h2 class="text-2xl font-logo font-semibold text-gray-800 mb-6">Order Summary</h2>
                     
                     <!-- Sample Cart Items -->
@@ -262,27 +276,15 @@
                             <span>Shipping</span>
                             <span id="shippingCost">Free</span>
                         </div>
-                        <div class="flex justify-between text-gray-700">
-                            <span>Tax</span>
-                            <span id="taxAmount">Rp 0</span>
-                        </div>
                         <div class="border-t border-gray-200 pt-3 flex justify-between text-xl font-bold text-gray-800">
                             <span>Total</span>
                             <span id="totalAmount">Rp 0</span>
                         </div>
                     </div>
 
-                    <!-- Promo Code -->
-                    <div class="mb-6">
-                        <div class="flex space-x-2">
-                            <input type="text" placeholder="Promo code" class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm">
-                            <button type="button" class="px-4 py-2 bg-gray-600 text-white rounded-lg text-sm hover:bg-gray-700 transition">Apply</button>
-                        </div>
-                    </div>
-
-                    <!-- Place Order Button -->
-                    <button type="submit" form="checkoutForm" class="w-full bg-red-800 text-white py-4 rounded-lg font-semibold text-lg hover:bg-red-900 transition-colors">
-                        Place Order
+                    <!-- Checkout Button -->
+                    <button type="submit" form="checkoutForm" class="w-full bg-red-800 text-white py-4 rounded-lg font-semibold text-lg hover:bg-red-900 transition-colors relative z-10 cursor-pointer">
+                        Checkout Now
                     </button>
 
                     <!-- Security Notice -->
@@ -322,14 +324,16 @@
             
             selectedItems.forEach(item => {
                 const itemTotal = item.price * item.quantity;
-                const imageUrl = getItemImage(item.id);
                 
                 itemsHTML += `
                     <div class="flex items-center space-x-4 pb-4 border-b border-gray-200">
-                        <img src="${imageUrl}" alt="${item.name}" class="w-16 h-16 object-cover rounded-lg">
+                        <div class="w-16 h-16 bg-gradient-to-br from-pink-100 to-pink-200 rounded-lg flex items-center justify-center">
+                            <span class="text-2xl">💎</span>
+                        </div>
                         <div class="flex-1">
                             <h3 class="font-semibold text-gray-800">${item.name}</h3>
                             <p class="text-sm text-gray-600">Qty: ${item.quantity}</p>
+                            <p class="text-sm text-yellow-600 font-bold">Rp ${item.price.toLocaleString('id-ID')} each</p>
                         </div>
                         <div class="text-lg font-semibold text-gray-800">Rp ${itemTotal.toLocaleString('id-ID')}</div>
                     </div>
@@ -337,14 +341,6 @@
             });
             
             checkoutItemsContainer.innerHTML = itemsHTML;
-        }
-        
-        function getItemImage(itemId) {
-            const images = {
-                1: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=80&h=80&fit=crop',
-                2: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=80&h=80&fit=crop'
-            };
-            return images[itemId] || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=80&h=80&fit=crop';
         }
         
         function updateOrderSummary() {
@@ -356,28 +352,26 @@
                 totalItems += item.quantity;
             });
             
-            const tax = subtotal * 0.1; // 10% tax
-            const total = subtotal + tax;
+            const total = subtotal; // Total is just subtotal without tax
             
             document.getElementById('subtotalAmount').textContent = 'Rp ' + subtotal.toLocaleString('id-ID');
-            document.getElementById('taxAmount').textContent = 'Rp ' + tax.toLocaleString('id-ID');
             document.getElementById('totalAmount').textContent = 'Rp ' + total.toLocaleString('id-ID');
         }
 
-        // Format card number with spaces
-        document.querySelector('input[name="card_number"]').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\s/g, '');
-            let formattedValue = value.replace(/(.{4})/g, '$1 ').trim();
-            e.target.value = formattedValue;
-        });
-
-        // Format expiry date
-        document.querySelector('input[name="expiry_date"]').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length >= 2) {
-                value = value.substring(0, 2) + '/' + value.substring(2, 4);
-            }
-            e.target.value = value;
+        // Payment method toggle
+        document.querySelectorAll('input[name="payment_method"]').forEach(function(radio) {
+            radio.addEventListener('change', function() {
+                const bankTransferQR = document.getElementById('bankTransferQR');
+                const eWalletQR = document.getElementById('eWalletQR');
+                
+                if (this.value === 'bank_transfer') {
+                    bankTransferQR.classList.remove('hidden');
+                    eWalletQR.classList.add('hidden');
+                } else if (this.value === 'e_wallet') {
+                    bankTransferQR.classList.add('hidden');
+                    eWalletQR.classList.remove('hidden');
+                }
+            });
         });
 
         // Update shipping cost based on selected method
@@ -403,29 +397,16 @@
                 selectedItems.forEach(item => {
                     subtotal += item.price * item.quantity;
                 });
-                const tax = subtotal * 0.1;
-                const newTotal = subtotal + tax + cost;
+                const newTotal = subtotal + cost;
                 totalAmount.textContent = 'Rp ' + newTotal.toLocaleString('id-ID');
             });
         });
 
-        // Show/hide payment fields based on selected method
-        document.querySelectorAll('input[name="payment_method"]').forEach(function(radio) {
-            radio.addEventListener('change', function() {
-                const creditCardFields = document.getElementById('creditCardFields');
-                if (this.value === 'credit_card') {
-                    creditCardFields.style.display = 'block';
-                } else {
-                    creditCardFields.style.display = 'none';
-                }
-            });
-        });
-
-        // Form validation
+        // Form validation and submission
         document.getElementById('checkoutForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+            console.log('Form submission triggered');
             
-            // Basic validation
+            // Basic validation (but don't prevent submission)
             const requiredFields = this.querySelectorAll('[required]');
             let isValid = true;
             
@@ -438,35 +419,24 @@
                 }
             });
             
-            if (isValid) {
-                // Show loading state
-                const submitBtn = this.querySelector('button[type="submit"]');
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fill in all required fields.');
+                console.log('Form validation failed');
+                return;
+            }
+            
+            console.log('Form validation passed, submitting...');
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]') || document.querySelector('button[form="checkoutForm"]');
+            if (submitBtn) {
                 submitBtn.innerHTML = '<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Processing...';
                 submitBtn.disabled = true;
-                
-                // Store order data
-                localStorage.setItem('orderData', JSON.stringify({
-                    items: selectedItems,
-                    formData: new FormData(this)
-                }));
-                
-                // Clear selected items from localStorage
-                localStorage.removeItem('selectedCartItems');
-                
-                // Redirect to success page
-                setTimeout(() => {
-                    window.location.href = '{{ route("checkout.success") }}';
-                }, 2000);
-            } else {
-                alert('Please fill in all required fields.');
             }
         });
 
-        // Only allow numbers for certain fields
-        document.querySelector('input[name="cvv"]').addEventListener('input', function(e) {
-            e.target.value = e.target.value.replace(/\D/g, '');
-        });
-
+        // Only allow numbers for postal code
         document.querySelector('input[name="postal_code"]').addEventListener('input', function(e) {
             e.target.value = e.target.value.replace(/\D/g, '');
         });
@@ -474,6 +444,15 @@
         // Load items when page loads
         document.addEventListener('DOMContentLoaded', function() {
             loadSelectedItems();
+            
+            // Add click handler for checkout button as backup
+            const checkoutButton = document.querySelector('button[form="checkoutForm"]');
+            if (checkoutButton) {
+                checkoutButton.addEventListener('click', function(e) {
+                    console.log('Checkout button clicked');
+                    // This will trigger the form submission
+                });
+            }
         });
     </script>
 </x-layout>

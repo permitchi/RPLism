@@ -34,8 +34,9 @@ return new class extends Migration
             $table->integer('price');
             $table->integer('amount'); 
             $table->text('description');
-            $table->string('phone_num');
-            $table->string('role');
+            $table->string('image');
+            $table->string('stock');
+            $table->timestamps();
         });
 
         Schema::create('transactions', function (Blueprint $table) {

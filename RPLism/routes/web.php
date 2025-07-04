@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
@@ -35,26 +37,23 @@ Route::get('/contact', function () {
     return view('homepage.contactus');
 })->middleware('auth')->name('contact');
 
-Route::get('/cart', function () {
-    return view('cart.index');
-})->middleware('auth')->name('cart');
+Route::get('/cart', [CartController::class, 'index'])->middleware('auth')->name('cart');
 
-Route::get('/checkout', function () {
-    return view('checkout/index');
-})->middleware('auth')->name('checkout');
+// Cart operations
+Route::post('/cart/add', [CartController::class, 'addToCart'])->middleware('auth')->name('cart.add');
+Route::put('/cart/update', [CartController::class, 'updateQuantity'])->middleware('auth')->name('cart.update');
+Route::delete('/cart/remove', [CartController::class, 'removeFromCart'])->middleware('auth')->name('cart.remove');
+Route::delete('/cart/clear', [CartController::class, 'clearCart'])->middleware('auth')->name('cart.clear');
 
-Route::post('/checkout/process', function () {
-    // Handle checkout processing logic here
-    return redirect()->route('checkout.success')->with('success', 'Order placed successfully!');
-})->middleware('auth')->name('checkout.process');
+Route::get('/checkout', [CheckoutController::class, 'index'])->middleware('auth')->name('checkout');
 
-Route::get('/checkout/success', function () {
-    return view('checkout/success');
-})->middleware('auth')->name('checkout.success');
+Route::post('/checkout/process', [CheckoutController::class, 'process'])->middleware('auth')->name('checkout.process');
+
+Route::get('/checkout/success', [CheckoutController::class, 'success'])->middleware('auth')->name('checkout.success');
 
 Route::get('/profile', [ProfileController::class, 'index'])->middleware('auth')->name('profile');
 
-Route::put('/profile/update', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update');
+Route::put('/profile/update', [ProfileController::class, 'update'])->middleware('auth')->name('profile.update.main');
 
 Route::get('/wishlist', function () {
     return view('pages.wishlist');
@@ -78,6 +77,9 @@ Route::get('/editproduct/{id}', function ($id) {
     $product = \App\Models\Product::findOrFail($id);
     return view('pages.editproductform', compact('product'));
 })->middleware('auth')->name('editproduct');
+
+Route::put('/products/{id}', [ProductController::class, 'update'])
+->middleware('auth')->name('products.update');
 
 Route::get('/search', [HomeController::class, 'search'])
 ->middleware('auth')->name('products.search');

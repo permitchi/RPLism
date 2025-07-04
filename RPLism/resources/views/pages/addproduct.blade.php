@@ -20,6 +20,10 @@
                     <label for="price" class="block text-gray-700">Price</label>
                     <input type="number" name="price" id="price" class="w-full border rounded px-3 py-2 mt-1" step="0.01" required>
                 </div>
+                <div class="mb-4">
+                    <label for="stock" class="block text-gray-700">Stock Quantity</label>
+                    <input type="number" name="stock" id="stock" class="w-full border rounded px-3 py-2 mt-1" min="0" required>
+                </div>
                 <div class="mb-4 flex items-center">
                     <input type="checkbox" name="is_featured" id="is_featured" class="mr-2" value="1">
                     <label for="is_featured" class="text-gray-700">Featured Product</label>
