@@ -61,7 +61,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
                             <h3 class="font-semibold text-gray-700 mb-2">Order Number</h3>
-                            <p class="text-gray-600">#MII{{ rand(100000, 999999) }}</p>
+                            <p class="text-gray-600">
+                                @if(isset($transaction) && $transaction)
+                                    #MII{{ $transaction->id }}
+                                @else
+                                    -
+                                @endif
+                            </p>
                         </div>
                         <div>
                             <h3 class="font-semibold text-gray-700 mb-2">Order Date</h3>
@@ -69,7 +75,13 @@
                         </div>
                         <div>
                             <h3 class="font-semibold text-gray-700 mb-2">Total Amount</h3>
-                            <p class="text-2xl font-bold text-red-800">Rp 4,950,000</p>
+                            <p class="text-2xl font-bold text-red-800">
+                                @if(isset($orderTotal))
+                                    Rp {{ number_format($orderTotal, 0, ',', '.') }}
+                                @else
+                                    -
+                                @endif
+                            </p>
                         </div>
                         <div>
                             <h3 class="font-semibold text-gray-700 mb-2">Payment Method</h3>
@@ -81,10 +93,10 @@
                     <div class="border-t border-gray-200 pt-6">
                         <h3 class="font-semibold text-gray-700 mb-4">Shipping Information</h3>
                         <div class="bg-gray-50 rounded-lg p-4">
-                            <p class="text-gray-700 font-medium">John Doe</p>
-                            <p class="text-gray-600">123 Main Street</p>
-                            <p class="text-gray-600">Jakarta, DKI Jakarta 12345</p>
-                            <p class="text-gray-600">Indonesia</p>
+                            <p class="text-gray-700 font-medium">{{ $shipping['name'] ?? ($user->first_name . ' ' . $user->last_name) }}</p>
+                            <p class="text-gray-600">{{ $shipping['address'] ?? $user->street_address }}</p>
+                            <p class="text-gray-600">{{ $shipping['city'] ?? $user->city }}, {{ $shipping['state'] ?? $user->state }} {{ $shipping['postal_code'] ?? $user->postal_code }}</p>
+                            <p class="text-gray-600">{{ $shipping['country'] ?? $user->country }}</p>
                         </div>
                         <div class="mt-4">
                             <p class="text-sm text-gray-600">
@@ -95,37 +107,12 @@
                     </div>
                 </div>
 
-                <!-- What's Next -->
-                <div class="bg-blue-50 rounded-lg p-6 mb-8">
-                    <h3 class="text-lg font-semibold text-blue-800 mb-3">What happens next?</h3>
-                    <div class="text-left space-y-3">
-                        <div class="flex items-start">
-                            <div class="w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                                <span class="text-blue-800 text-sm font-bold">1</span>
-                            </div>
-                            <p class="text-blue-700">You'll receive an order confirmation email within the next few minutes.</p>
-                        </div>
-                        <div class="flex items-start">
-                            <div class="w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                                <span class="text-blue-800 text-sm font-bold">2</span>
-                            </div>
-                            <p class="text-blue-700">We'll prepare your items and send you a shipping notification with tracking information.</p>
-                        </div>
-                        <div class="flex items-start">
-                            <div class="w-6 h-6 bg-blue-200 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                                <span class="text-blue-800 text-sm font-bold">3</span>
-                            </div>
-                            <p class="text-blue-700">Your order will be delivered to your specified address within the estimated timeframe.</p>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Action Buttons -->
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <a href="{{ route('homepage') }}" class="bg-red-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-red-900 transition-colors">
                         Continue Shopping
                     </a>
-                    <a href="#" class="bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                    <a href="{{ route('orderhistory') }}" class="bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
                         Track Your Order
                     </a>
                 </div>

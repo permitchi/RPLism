@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Models\Transaction;
 
 class CheckoutController extends Controller
 {
@@ -34,6 +35,7 @@ class CheckoutController extends Controller
             'country' => 'required|string|max:255',
             'shipping_method' => 'required|string',
             'payment_method' => 'required|string',
+            'order_total' => 'required|numeric|min:0',
         ]);
 
         $user = Auth::user();
@@ -60,10 +62,32 @@ class CheckoutController extends Controller
             // TODO: Clear cart
             // TODO: Send confirmation email
 
+
+            // Create a new transaction after successful checkout
+            $transaction = Transaction::create([
+                'user_id' => $user->id,
+                'status' => 'pending',
+                // Add more fields as needed, e.g. total, shipping info, etc.
+                'total' => $request->order_total,
+            ]);
+
             DB::commit();
 
+            // Pass shipping info and total to success page via session
+            $shipping = [
+                'name' => $request->first_name . ' ' . $request->last_name,
+                'address' => $request->address,
+                'city' => $request->city,
+                'state' => $request->state,
+                'postal_code' => $request->postal_code,
+                'country' => $request->country,
+            ];
+            $orderTotal = $request->order_total;
+
             return redirect()->route('checkout.success')
-                ->with('success', 'Order placed successfully!');
+                ->with('success', 'Order placed successfully!')
+                ->with('shipping', $shipping)
+                ->with('order_total', $orderTotal);
 
         } catch (\Exception $e) {
             DB::rollback();
@@ -77,8 +101,13 @@ class CheckoutController extends Controller
     /**
      * Display the success page
      */
-    public function success()
+    public function success(Request $request)
     {
-        return view('checkout.success');
+        $user = Auth::user();
+        $shipping = session('shipping');
+        $orderTotal = session('order_total');
+        // Get the latest transaction for this user (just created in process)
+        $transaction = Transaction::where('user_id', $user->id)->latest()->first();
+        return view('checkout.success', compact('user', 'shipping', 'transaction', 'orderTotal'));
     }
 }

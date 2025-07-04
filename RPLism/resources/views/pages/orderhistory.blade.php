@@ -57,170 +57,46 @@
                 <!-- Orders List -->
                 <div class="space-y-6" id="ordersList">
                     @foreach($orders as $order)
-                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300 order-item" 
-                             data-status="{{ $order->status }}" 
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300 order-item"
+                             data-status="{{ $order->status }}"
                              data-date="{{ $order->created_at->format('Y-m-d') }}"
-                             data-search="{{ strtolower($order->order_number . ' ' . $order->items->pluck('product.name')->implode(' ')) }}">
-                            
-                            <!-- Order Header -->
+                             data-search="{{ strtolower('MII' . $order->id) }}">
                             <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b">
                                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                     <div class="flex flex-col md:flex-row gap-6">
                                         <div>
-                                            <p class="font-body font-semibold text-gray-800">Order #{{ $order->order_number }}</p>
+                                            <p class="font-body font-semibold text-gray-800">Order #MII{{ $order->id }}</p>
                                             <p class="font-body text-sm text-gray-600">{{ $order->created_at->format('M d, Y \a\t H:i') }}</p>
                                         </div>
                                         <div>
                                             <p class="font-body text-sm text-gray-600">Total Amount</p>
-                                            <p class="font-body font-bold text-yellow-600 text-lg">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
-                                        </div>
-                                        <div>
-                                            <p class="font-body text-sm text-gray-600">Items</p>
-                                            <p class="font-body font-semibold text-gray-800">{{ $order->items->count() }} {{ $order->items->count() === 1 ? 'item' : 'items' }}</p>
+                                            <p class="font-body font-bold text-yellow-600 text-lg">Rp {{ number_format($order->total ?? 0, 0, ',', '.') }}</p>
                                         </div>
                                     </div>
-                                    
-                                    <!-- Order Status -->
                                     <div class="flex items-center gap-4">
                                         @switch($order->status)
                                             @case('pending')
-                                                <span class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-sm font-body font-medium">
-                                                    <svg class="inline w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
-                                                    </svg>
-                                                    Pending
-                                                </span>
+                                                <span class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-sm font-body font-medium">Pending</span>
+                                                @break
+                                            @case('on going')
+                                                <span class="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-body font-medium">On Going</span>
+                                                @break
+                                            @case('finished')
+                                                <span class="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-body font-medium">Finished</span>
                                                 @break
                                             @case('processing')
-                                                <span class="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-body font-medium">
-                                                    <svg class="inline w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
-                                                    </svg>
-                                                    Processing
-                                                </span>
+                                                <span class="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-body font-medium">Processing</span>
                                                 @break
                                             @case('shipped')
-                                                <span class="px-4 py-2 bg-purple-100 text-purple-800 rounded-full text-sm font-body font-medium">
-                                                    <svg class="inline w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"/>
-                                                        <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707L16 7.586A1 1 0 0015.414 7H14z"/>
-                                                    </svg>
-                                                    Shipped
-                                                </span>
+                                                <span class="px-4 py-2 bg-purple-100 text-purple-800 rounded-full text-sm font-body font-medium">Shipped</span>
                                                 @break
                                             @case('delivered')
-                                                <span class="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-body font-medium">
-                                                    <svg class="inline w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-                                                    </svg>
-                                                    Delivered
-                                                </span>
+                                                <span class="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-body font-medium">Delivered</span>
                                                 @break
                                             @case('cancelled')
-                                                <span class="px-4 py-2 bg-red-100 text-red-800 rounded-full text-sm font-body font-medium">
-                                                    <svg class="inline w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                                                    </svg>
-                                                    Cancelled
-                                                </span>
+                                                <span class="px-4 py-2 bg-red-100 text-red-800 rounded-full text-sm font-body font-medium">Cancelled</span>
                                                 @break
                                         @endswitch
-
-                                        <!-- Toggle Details Button -->
-                                        <button onclick="toggleOrderDetails('order-{{ $order->id }}')" 
-                                                class="text-yellow-600 hover:text-yellow-700 font-body text-sm transition duration-300">
-                                            <svg class="w-5 h-5 transform transition-transform duration-300" id="toggle-icon-{{ $order->id }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Order Details (Collapsible) -->
-                            <div id="order-{{ $order->id }}" class="hidden">
-                                <!-- Shipping Information -->
-                                <div class="px-6 py-4 bg-gray-50 border-b">
-                                    <h3 class="font-body font-semibold text-gray-800 mb-3">Shipping Information</h3>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <p class="font-body text-sm text-gray-600">Shipping Address</p>
-                                            <p class="font-body text-gray-800">{{ $order->shipping_address }}</p>
-                                        </div>
-                                        @if($order->tracking_number)
-                                            <div>
-                                                <p class="font-body text-sm text-gray-600">Tracking Number</p>
-                                                <p class="font-body text-gray-800 font-mono">{{ $order->tracking_number }}</p>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <!-- Order Items -->
-                                <div class="px-6 py-4">
-                                    <h3 class="font-body font-semibold text-gray-800 mb-4">Order Items</h3>
-                                    <div class="space-y-4">
-                                        @foreach($order->items as $item)
-                                            <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                                                <!-- Product Image -->
-                                                <div class="w-16 h-16 bg-gradient-to-br from-pink-100 to-pink-200 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    @if($item->product->image)
-                                                        <img src="{{ asset('storage/' . $item->product->image) }}" 
-                                                             alt="{{ $item->product->name }}" 
-                                                             class="w-12 h-10 object-contain rounded" />
-                                                    @else
-                                                        <span class="text-lg">💎</span>
-                                                    @endif
-                                                </div>
-
-                                                <!-- Product Details -->
-                                                <div class="flex-1">
-                                                    <h4 class="font-body font-semibold text-gray-800">{{ $item->product->name }}</h4>
-                                                    <p class="font-body text-sm text-gray-600">Quantity: {{ $item->quantity }}</p>
-                                                    <p class="font-body text-sm text-gray-600">Unit Price: Rp {{ number_format($item->price, 0, ',', '.') }}</p>
-                                                </div>
-
-                                                <!-- Item Total -->
-                                                <div class="text-right">
-                                                    <p class="font-body font-bold text-gray-800">Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</p>
-                                                </div>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-
-                                <!-- Order Actions -->
-                                <div class="px-6 py-4 bg-gray-50 border-t flex flex-col md:flex-row gap-4 justify-between items-center">
-                                    <div class="flex gap-2">
-                                        @if($order->status === 'delivered')
-                                            <button onclick="downloadInvoice('{{ $order->id }}')" 
-                                                    class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg font-body text-sm transition duration-300">
-                                                Download Invoice
-                                            </button>
-                                            <button onclick="reorderItems('{{ $order->id }}')" 
-                                                    class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 py-2 rounded-lg font-body text-sm transition duration-300">
-                                                Reorder
-                                            </button>
-                                        @endif
-
-                                        @if(in_array($order->status, ['pending', 'processing']))
-                                            <button onclick="cancelOrder('{{ $order->id }}')" 
-                                                    class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-lg font-body text-sm transition duration-300">
-                                                Cancel Order
-                                            </button>
-                                        @endif
-
-                                        @if($order->status === 'shipped' && $order->tracking_number)
-                                            <button onclick="trackOrder('{{ $order->tracking_number }}')" 
-                                                    class="bg-blue-100 hover:bg-blue-200 text-blue-700 px-4 py-2 rounded-lg font-body text-sm transition duration-300">
-                                                Track Package
-                                            </button>
-                                        @endif
-                                    </div>
-
-                                    <div class="text-right">
-                                        <p class="font-body text-sm text-gray-600">Order Total</p>
-                                        <p class="font-body font-bold text-xl text-gray-800">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
                                     </div>
                                 </div>
                             </div>

@@ -52,84 +52,32 @@
                 <!-- Orders List -->
                 <div class="space-y-6" id="ordersList">
                     @foreach($orders as $order)
-                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300 order-item" 
-                             data-status="{{ $order->status }}" 
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition duration-300 order-item"
+                             data-status="{{ $order->status }}"
                              data-date="{{ $order->created_at->format('Y-m-d') }}"
-                             data-search="{{ strtolower($order->order_number . ' ' . $order->items->pluck('product.name')->implode(' ')) }}">
-                            <!-- Order Header -->
+                             data-search="{{ strtolower('MII' . $order->id) }}">
                             <div class="bg-gradient-to-r from-gray-50 to-gray-100 px-6 py-4 border-b">
                                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                     <div class="flex flex-col md:flex-row gap-6">
                                         <div>
-                                            <p class="font-body font-semibold text-gray-800">Order #{{ $order->order_number }}</p>
+                                            <p class="font-body font-semibold text-gray-800">Order #MII{{ $order->id }}</p>
                                             <p class="font-body text-sm text-gray-600">{{ $order->created_at->format('M d, Y \a\t H:i') }}</p>
                                         </div>
                                         <div>
                                             <p class="font-body text-sm text-gray-600">Total Amount</p>
-                                            <p class="font-body font-bold text-yellow-600 text-lg">Rp {{ number_format($order->total_amount, 0, ',', '.') }}</p>
-                                        </div>
-                                        <div>
-                                            <p class="font-body text-sm text-gray-600">Items</p>
-                                            <p class="font-body font-semibold text-gray-800">{{ $order->items->count() }} {{ $order->items->count() === 1 ? 'item' : 'items' }}</p>
+                                            <p class="font-body font-bold text-yellow-600 text-lg">Rp {{ number_format($order->total ?? 0, 0, ',', '.') }}</p>
                                         </div>
                                     </div>
-                                    <!-- Order Status (Admin can change) -->
                                     <div class="flex items-center gap-4">
                                         <form method="POST" action="{{ route('orders.updateStatus', $order->id) }}" class="flex items-center gap-2">
                                             @csrf
                                             @method('PUT')
                                             <select name="status" class="px-3 py-2 border rounded-lg font-body text-sm" onchange="this.form.submit()">
                                                 <option value="pending" @if($order->status=='pending') selected @endif>Pending</option>
-                                                <option value="processing" @if($order->status=='processing') selected @endif>Processing</option>
-                                                <option value="shipped" @if($order->status=='shipped') selected @endif>Shipped</option>
-                                                <option value="delivered" @if($order->status=='delivered') selected @endif>Delivered</option>
-                                                <option value="cancelled" @if($order->status=='cancelled') selected @endif>Cancelled</option>
+                                                <option value="on going" @if($order->status=='on going') selected @endif>On Going</option>
+                                                <option value="finished" @if($order->status=='finished') selected @endif>Finished</option>
                                             </select>
                                         </form>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Order Details (reuse from user order history) -->
-                            <div id="order-{{ $order->id }}" class="">
-                                <!-- Shipping Information -->
-                                <div class="px-6 py-4 bg-gray-50 border-b">
-                                    <h3 class="font-body font-semibold text-gray-800 mb-3">Shipping Information</h3>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <p class="font-body text-sm text-gray-600">Shipping Address</p>
-                                            <p class="font-body text-gray-800">{{ $order->shipping_address }}</p>
-                                        </div>
-                                        @if($order->tracking_number)
-                                            <div>
-                                                <p class="font-body text-sm text-gray-600">Tracking Number</p>
-                                                <p class="font-body text-gray-800 font-mono">{{ $order->tracking_number }}</p>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </div>
-                                <!-- Order Items -->
-                                <div class="px-6 py-4">
-                                    <h3 class="font-body font-semibold text-gray-800 mb-4">Order Items</h3>
-                                    <div class="space-y-4">
-                                        @foreach($order->items as $item)
-                                            <div class="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                                                <div class="w-16 h-16 bg-gradient-to-br from-pink-100 to-pink-200 rounded-lg flex items-center justify-center flex-shrink-0">
-                                                    @if($item->product->image)
-                                                        <img src="{{ asset('storage/' . $item->product->image) }}" alt="{{ $item->product->name }}" class="w-12 h-10 object-contain rounded" />
-                                                    @else
-                                                        <span class="text-lg">💎</span>
-                                                    @endif
-                                                </div>
-                                                <div class="flex-1">
-                                                    <h4 class="font-body font-semibold text-gray-800">{{ $item->product->name }}</h4>
-                                                    <p class="font-body text-sm text-gray-600">Quantity: {{ $item->quantity }}</p>
-                                                    <p class="font-body text-sm text-gray-600">Unit Price: Rp {{ number_format($item->price, 0, ',', '.') }}</p>
-                                                </div>
-                                                <div class="text-right">
-                                                    <p class="font-body font-bold text-gray-800">Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</p>
-                                                </div>
-                                            </div>
-                                        @endforeach
                                     </div>
                                 </div>
                             </div>

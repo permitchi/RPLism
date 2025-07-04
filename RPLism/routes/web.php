@@ -72,18 +72,17 @@ Route::get('/wishlist', function () {
 })->middleware('auth')->name('wishlist');
 
 
+
 // Admin Orders Page
-Route::get('/adminorders', function () {
-    if (Auth::check() && Auth::user()->role === 'admin') {
-        // You may want to fetch orders here, but for now just return the view
-        return view('pages.adminorders');
-    }
-    abort(403);
-})->middleware('auth')->name('adminorders');
+use App\Http\Controllers\OrderAdminController;
+Route::get('/adminorders', [OrderAdminController::class, 'index'])->middleware('auth')->name('adminorders');
+Route::put('/adminorders/{id}/status', [OrderAdminController::class, 'updateStatus'])->middleware('auth')->name('orders.updateStatus');
 
 // User Order History Page
 Route::get('/transaction', function () {
-    return view('pages.orderhistory');
+    $user = Auth::user();
+    $orders = \App\Models\Transaction::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+    return view('pages.orderhistory', compact('orders'));
 })->middleware('auth')->name('orderhistory');
 
 Route::get('/addproduct', function () {
