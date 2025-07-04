@@ -5,6 +5,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProductController;
+use App\Models\Transaction;
+
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -44,7 +46,13 @@ Route::get('/checkout', function () {
 })->middleware('auth')->name('checkout');
 
 Route::post('/checkout/process', function () {
-    // Handle checkout processing logic here
+    // Log a transaction for the current user with status 'pending'
+    if (Auth::check()) {
+        Transaction::create([
+            'user_id' => Auth::id(),
+            'status' => 'pending',
+        ]);
+    }
     return redirect()->route('checkout.success')->with('success', 'Order placed successfully!');
 })->middleware('auth')->name('checkout.process');
 
@@ -60,6 +68,17 @@ Route::get('/wishlist', function () {
     return view('pages.wishlist');
 })->middleware('auth')->name('wishlist');
 
+
+// Admin Orders Page
+Route::get('/adminorders', function () {
+    if (Auth::check() && Auth::user()->role === 'admin') {
+        // You may want to fetch orders here, but for now just return the view
+        return view('pages.adminorders');
+    }
+    abort(403);
+})->middleware('auth')->name('adminorders');
+
+// User Order History Page
 Route::get('/transaction', function () {
     return view('pages.orderhistory');
 })->middleware('auth')->name('orderhistory');

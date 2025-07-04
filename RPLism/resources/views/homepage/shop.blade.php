@@ -20,13 +20,6 @@
         <div class="flex justify-between items-center mb-8">
             <div class="flex gap-4">
                 <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 font-body">
-                    <option>All Categories</option>
-                    <option>Necklaces</option>
-                    <option>Earrings</option>
-                    <option>Bracelets</option>
-                    <option>Rings</option>
-                </select>
-                <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 font-body">
                     <option>Sort by Price</option>
                     <option>Low to High</option>
                     <option>High to Low</option>

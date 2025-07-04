@@ -86,13 +86,22 @@
                     <!-- Dropdown Menu -->
                     <div id="profileDropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50 ">
                         <div class="py-2">
+                            @if(auth()->check() && auth()->user()->role === 'admin')
+                            <a href="{{ route('adminorders') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-yellow-100 hover:text-red-900 font-body hover:font-medium">
+                                <svg class="w-5 h-5 mr-3 text-gray-500  hover:text-red-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                </svg>
+                                Orders
+                            </a>
+                            @else
                             <a href="{{ route('orderhistory') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-yellow-100 hover:text-red-900 font-body hover:font-medium">
                                 <svg class="w-5 h-5 mr-3 text-gray-500  hover:text-red-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                                 </svg>
                                 Order History
                             </a>
-                            <a href="{{ route('wishlist') }}" class="flex items-center px-4 py-3 text-gray-700 hover:bg-yellow-100 hover:text-red-900 font-body hover:font-medium">
+                            @endif
+                            <a href="#" class="flex items-center px-4 py-3 text-gray-700 hover:bg-yellow-100 hover:text-red-900 font-body hover:font-medium">
                                 <svg class="w-5 h-5 mr-3 text-gray-500  hover:text-red-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                                 </svg>
